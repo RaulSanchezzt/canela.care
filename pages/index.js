@@ -2,29 +2,52 @@ import Canela from "../components/Canela";
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [tasks, setTasks] = useState([
-    "Go for a 30-minute walk",
-    "Read 10 pages of a book",
-    "Write 3 things you're grateful for",
-  ]);
-
+  const [tasks, setTasks] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [streak, setStreak] = useState(0);
   const [hasIncreasedStreak, setHasIncreasedStreak] = useState(false);
+  const [loading, setLoading] = useState(true); // Arrancamos en loading hasta cargar las tareas
 
-  const allTasksCompleted = completed.length === tasks.length;
+  const allTasksCompleted =
+    completed.length === tasks.length && tasks.length > 0;
 
-  const toggleComplete = (task) => {
-    if (completed.includes(task)) {
-      setCompleted(completed.filter((t) => t !== task));
+  const toggleComplete = (index) => {
+    if (completed.includes(index)) {
+      setCompleted(completed.filter((i) => i !== index));
     } else {
-      setCompleted([...completed, task]);
+      setCompleted([...completed, index]);
+    }
+  };
+
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/generate-tasks");
+      const data = await res.json();
+
+      if (data.tasks) {
+        const cleanedTasks = data.tasks.map((task) => task.trim());
+        setTasks(cleanedTasks);
+        setCompleted([]);
+        setHasIncreasedStreak(false);
+      } else {
+        alert("No tasks returned!");
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      alert("Error fetching tasks.");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    fetchTasks(); // Solo carga al inicio
+  }, []);
+
+  useEffect(() => {
     if (allTasksCompleted && !hasIncreasedStreak) {
-      setStreak(streak + 1);
+      setStreak((prevStreak) => prevStreak + 1);
       setHasIncreasedStreak(true);
       console.log("🎉 Streak increased! New streak:", streak + 1);
     }
@@ -46,32 +69,36 @@ export default function Home() {
 
       <Canela mood={allTasksCompleted ? "happy" : "neutral"} />
 
-      <div className="w-full max-w-md mt-6 px-4">
-        {tasks.map((task, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between bg-white p-4 rounded shadow mb-3"
-          >
-            <p
-              className={
-                completed.includes(task)
-                  ? "line-through text-gray-500"
-                  : "text-gray-800"
-              }
+      {loading ? (
+        <p className="text-gray-600 mt-6">Loading today's tasks...</p>
+      ) : (
+        <div className="w-full max-w-md mt-6 px-4">
+          {tasks.map((task, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between bg-white p-4 rounded shadow mb-3"
             >
-              {task}
-            </p>
-            <button
-              onClick={() => toggleComplete(task)}
-              className={`px-3 py-1 rounded text-white ${
-                completed.includes(task) ? "bg-green-400" : "bg-blue-500"
-              }`}
-            >
-              {completed.includes(task) ? "Done" : "Do"}
-            </button>
-          </div>
-        ))}
-      </div>
+              <p
+                className={
+                  completed.includes(index)
+                    ? "line-through text-gray-500"
+                    : "text-gray-800"
+                }
+              >
+                {task}
+              </p>
+              <button
+                onClick={() => toggleComplete(index)}
+                className={`px-3 py-1 rounded text-white ${
+                  completed.includes(index) ? "bg-green-400" : "bg-blue-500"
+                }`}
+              >
+                {completed.includes(index) ? "Done" : "Do"}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
