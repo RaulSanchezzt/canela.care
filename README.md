@@ -1,40 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+## Requisites
 
-## Getting Started
+### Software
 
-First, run the development server:
+- [Visual Studio Code](https://code.visualstudio.com/) _(WSL)_
+- [Node Version Manager](https://github.com/nvm-sh/nvm)
+
+### Deployment
+
+- [Vercel](https://vercel.com/)
+
+### AI API Keys
+
+- [Open Router](https://openrouter.ai/)
+
+## How to set up
+
+Once you have everything necessary installed, download this repo:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+$ git clone git@github.com:RaulSanchezzt/tech.git
+
+$ cd tech
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, install the `node_modules`...
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+$ npm install
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Finally, run this command to set up in _local_:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+```bash
+$ npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> tech@0.1.0 dev
+> next dev
 
-## Learn More
+   ▲ Next.js 15.2.3
+   - Local:        http://localhost:3000
+   - Network:      http://10.255.255.254:3000
+   - Environments: .env.local
 
-To learn more about Next.js, take a look at the following resources:
+ ✓ Starting...
+ ✓ Ready in 2.1s
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+> [!NOTE]
+> Remember to add your own **Open Router AI API** key to `.env.local`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- [x] Deployed live on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Frontend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- [x] Simple Frontend with 3 tasks
+- [x] Add current streak of days
+- [x] Progressive Web App (PWA)
+- [ ] Add motivational phrases
+- [ ] Add log-in / sign-in menu
+
+### Backend
+
+- [x] AI model can generate tasks (each time it refresh)
+- [ ] AI model generate tasks individually only by date
+- [ ] Add Push notifications
+- [ ] Add Coins and rewards
+
+### Database
+
+- [ ] Create database to store user and auth
+- [ ] Store the tasks of each user by date and progress
+- [ ] Save the streak of days for each user
+
+---
+
+## Config
+
+Here you can see how was this project configured at the begining:
+
+```bash
+$ npx create-next-app tech --javascript
+Need to install the following packages:
+  create-next-app@15.2.3
+Ok to proceed? (y) y
+✔ Would you like to use ESLint? … No
+✔ Would you like to use Tailwind CSS? … Yes
+✔ Would you like your code inside a `src/` directory? … No
+✔ Would you like to use App Router? (recommended) … No
+✔ Would you like to use Turbopack for `next dev`? … No
+✔ Would you like to customize the import alias (`@/*` by default)? … No
+Creating a new Next.js app in /home/raul/tech.
+
+Using npm.
+
+Initializing project with template: default-tw
+
+
+Installing dependencies:
+- react
+- react-dom
+- next
+
+Installing devDependencies:
+- @tailwindcss/postcss
+- tailwindcss
+```
