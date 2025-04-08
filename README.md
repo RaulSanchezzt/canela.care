@@ -1,3 +1,8 @@
+# AI MODEL
+
+> [!TIP]
+> In this branch, tasks are generated using an AI Model
+
 ## Requisites
 
 ### Software
@@ -13,6 +18,10 @@
 
 - [Open Router](https://openrouter.ai/)
 
+### Database
+
+- [Supabase](https://supabase.com/)
+
 ## How to set up
 
 Once you have everything necessary installed, download this repo:
@@ -23,6 +32,12 @@ $ git clone git@github.com:RaulSanchezzt/tech.git
 
 $ cd tech
 
+```
+
+Move to the `ai-model` branch:
+
+```bash
+$ git checkout ai-model
 ```
 
 Then, install the `node_modules`...
@@ -61,20 +76,20 @@ $ npm run dev
 - [x] Add current streak of days
 - [x] Progressive Web App (PWA)
 - [ ] Add motivational phrases
-- [ ] Add log-in / sign-in menu
+- [x] Add log-in / sign-in menu
 
 ### Backend
 
 - [x] AI model can generate tasks (each time it refresh)
-- [ ] AI model generate tasks individually only by date
+- [x] AI model generate tasks individually only by date
 - [ ] Add Push notifications
 - [ ] Add Coins and rewards
 
 ### Database
 
-- [ ] Create database to store user and auth
-- [ ] Store the tasks of each user by date and progress
-- [ ] Save the streak of days for each user
+- [x] Create database to store user and auth
+- [x] Store the tasks of each user by date and progress
+- [x] Save the streak of days for each user
 
 ---
 
