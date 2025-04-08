@@ -1,7 +1,7 @@
-# AI MODEL
+# MAIN
 
 > [!TIP]
-> In this branch, tasks are generated using an AI Model
+> Tasks are manually added to the APP.
 
 ## Requisites
 
@@ -32,12 +32,6 @@ $ git clone git@github.com:RaulSanchezzt/tech.git
 
 $ cd tech
 
-```
-
-Move to the `ai-model` branch:
-
-```bash
-$ git checkout ai-model
 ```
 
 Then, install the `node_modules`...
@@ -80,8 +74,8 @@ $ npm run dev
 
 ### Backend
 
-- [x] AI model can generate tasks (each time it refresh)
-- [x] AI model generate tasks individually only by date
+- [x] Each day 3x tasks are assigned to each user
+- [ ] If a user completes the tasks the streak continues
 - [ ] Add Push notifications
 - [ ] Add Coins and rewards
 
@@ -90,6 +84,17 @@ $ npm run dev
 - [x] Create database to store user and auth
 - [x] Store the tasks of each user by date and progress
 - [x] Save the streak of days for each user
+- [ ] Store the available tasks and their compensation
+- [ ] Store the customes available
+- [ ] Store the customes each user have purchased
+- [ ] Save which customes are wearing each user
+
+## Design
+
+- [ ] Mail link -> Override Supabase default template
+- [ ] Main page -> It only has a black page for the moment
+- [ ] Think of a domain name and name APP!
+- [ ] Design more costumes
 
 ---
 
