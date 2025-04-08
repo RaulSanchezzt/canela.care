@@ -3,7 +3,7 @@
 ### Software
 
 - [Visual Studio Code](https://code.visualstudio.com/) _(WSL)_
-- [Node Version Manager](https://github.com/nvm-sh/nvm)
+- [Node Version Manager](https://github.com/nvm-sh/nvm) > `(v22.14.0)`
 
 ### Deployment
 
