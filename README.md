@@ -75,27 +75,29 @@ $ npm run dev
 ### Backend
 
 - [x] Each day 3x tasks are assigned to each user
-- [ ] If a user completes the tasks the streak continues
+- [x] If a user completes the tasks the streak continues
 - [ ] Add Push notifications
-- [ ] Add Coins and rewards
+- [x] Add Coins and rewards
 
 ### Database
 
 - [x] Create database to store user and auth
 - [x] Store the tasks of each user by date and progress
 - [x] Save the streak of days for each user
-- [ ] Store the available tasks and their compensation
-- [ ] Store the customes available
-- [ ] Store the customes each user have purchased
-- [ ] Save which customes are wearing each user
+- [x] Store the available tasks and their compensation
+- [x] Store the customes available
+- [x] Store the customes each user have purchased
+- [x] Save which customes are wearing each user
+- [x] New Data Base User until 26 may :)
 
 ## Design
 
-- [ ] Mail link -> Override Supabase default template
-- [ ] Main page -> It only has a black page for the moment
-- [x] Think of a domain name and name APP! -> canela.care
+- [x] Mail link
+- [x] Main page
 - [ ] Design more costumes
-- [ ] Time dedicated:
+- [ ] Track Time dedicated
+- [x] Favicon
+- [ ] Buy Domain
 
 ---
 
