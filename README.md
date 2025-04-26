@@ -93,8 +93,9 @@ $ npm run dev
 
 - [ ] Mail link -> Override Supabase default template
 - [ ] Main page -> It only has a black page for the moment
-- [ ] Think of a domain name and name APP!
+- [x] Think of a domain name and name APP! -> canela.care
 - [ ] Design more costumes
+- [ ] Time dedicated:
 
 ---
 
