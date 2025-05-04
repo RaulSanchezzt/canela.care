@@ -28,9 +28,9 @@ Once you have everything necessary installed, download this repo:
 
 ```bash
 
-$ git clone git@github.com:RaulSanchezzt/tech.git
+$ git clone git@github.com:RaulSanchezzt/canela.care.git
 
-$ cd tech
+$ cd canela.care
 
 ```
 
@@ -94,10 +94,11 @@ $ npm run dev
 
 - [x] Mail link
 - [x] Main page
-- [ ] Design more costumes
-- [ ] Track Time dedicated
+- [x] Design more costumes
+- [x] Track Time dedicated
 - [x] Favicon
-- [ ] Buy Domain
+- [x] Buy Domain
+- [x] Custom SMTP mail and template
 
 ---
 

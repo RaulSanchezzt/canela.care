@@ -4,11 +4,23 @@ import { supabase } from "../lib/supabaseClient";
 export default function ProfilePanel({ userData, setUserData }) {
   const [isEditing, setIsEditing] = useState(false);
   const [aliasInput, setAliasInput] = useState(userData?.alias || "");
+  const [avatarGender, setAvatarGender] = useState(
+    userData?.avatar_gender || "girl"
+  );
   const [userCostumes, setUserCostumes] = useState([]);
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [showInitialModal, setShowInitialModal] = useState(false);
 
   useEffect(() => {
-    if (userData) {
+    if (userData?.id && !userData.alias) {
+      setShowInitialModal(true);
+    }
+  }, [userData]);
+
+  const [savingInitialData, setSavingInitialData] = useState(false);
+
+  useEffect(() => {
+    if (userData?.id) {
       fetchUserCostumes();
     }
   }, [userData]);
@@ -30,22 +42,60 @@ export default function ProfilePanel({ userData, setUserData }) {
     const trimmed = aliasInput.trim();
     if (!trimmed) return;
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("users")
       .update({ alias: trimmed })
-      .eq("id", userData.id)
-      .select()
-      .single();
+      .eq("id", userData.id);
 
-    if (error && error.code === "23505") {
+    if (error?.code === "23505") {
       alert("❌ That alias is already taken. Try a different one.");
       return;
     }
 
+    setUserData((prev) => ({ ...prev, alias: trimmed }));
+    setIsEditing(false);
+  };
+
+  const handleGenderChange = async (gender) => {
+    setAvatarGender(gender);
+
+    const { error } = await supabase
+      .from("users")
+      .update({ avatar_gender: gender })
+      .eq("id", userData.id);
+
     if (!error) {
-      setUserData((prev) => ({ ...prev, alias: trimmed }));
-      setIsEditing(false);
+      setUserData((prev) => ({ ...prev, avatar_gender: gender }));
+    } else {
+      console.error("Error updating avatar gender:", error);
     }
+  };
+
+  const handleInitialSave = async () => {
+    const trimmed = aliasInput.trim();
+    if (!trimmed || !avatarGender) return;
+
+    setSavingInitialData(true);
+
+    const { error } = await supabase
+      .from("users")
+      .update({ alias: trimmed, avatar_gender: avatarGender })
+      .eq("id", userData.id);
+
+    if (error?.code === "23505") {
+      alert("❌ That alias is already taken. Try a different one.");
+      setSavingInitialData(false);
+      return;
+    }
+
+    setUserData((prev) => ({
+      ...prev,
+      alias: trimmed,
+      avatar_gender: avatarGender,
+    }));
+
+    setShowInitialModal(false);
+    setSavingInitialData(false);
   };
 
   const equipCostume = async (userCostumeId) => {
@@ -112,51 +162,125 @@ export default function ProfilePanel({ userData, setUserData }) {
         👤 Profile
       </h3>
 
-      <div className="mb-6">
-        {isEditing ? (
-          <div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center">
+      {/* Modal obligatorio al primer inicio */}
+      {showInitialModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full text-center">
+            <h2 className="text-xl font-bold text-purple-700 mb-4">Welcome!</h2>
+            <p className="mb-3 text-gray-700">Choose your alias and avatar:</p>
+
             <input
               value={aliasInput}
               onChange={(e) => setAliasInput(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-800 mb-4"
-              placeholder="Enter your alias"
+              placeholder="Enter alias"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 text-gray-800 placeholder-gray-400"
             />
-            <div className="flex gap-3">
+
+            <div className="flex justify-center gap-4 mb-4">
               <button
-                onClick={handleAliasSave}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                onClick={() => setAvatarGender("boy")}
+                className={`px-4 py-2 rounded-lg ${
+                  avatarGender === "boy"
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
               >
-                Save
+                👦 Boy
               </button>
               <button
-                onClick={() => setIsEditing(false)}
-                className="text-gray-500 underline text-sm"
+                onClick={() => setAvatarGender("girl")}
+                className={`px-4 py-2 rounded-lg ${
+                  avatarGender === "girl"
+                    ? "bg-pink-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
               >
-                Cancel
+                👧 Girl
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center">
-            <p className="text-gray-700 mb-2">
-              <span className="font-medium">Alias:</span>{" "}
-              <span className="text-purple-700 font-semibold">
-                {userData?.alias || "No alias"}
-              </span>
-            </p>
+
             <button
-              onClick={() => setIsEditing(true)}
-              className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition text-sm"
+              onClick={handleInitialSave}
+              disabled={savingInitialData}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition w-full"
             >
-              ✏️ Edit Alias
+              {savingInitialData ? "Saving..." : "Continue"}
             </button>
           </div>
-        )}
+        </div>
+      )}
+
+      <div className="mb-6">
+        <div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center">
+          {isEditing ? (
+            <>
+              <input
+                value={aliasInput}
+                onChange={(e) => setAliasInput(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-3 text-gray-800 placeholder-gray-400"
+                placeholder="Enter your alias"
+              />
+              <div className="flex gap-2 mb-3">
+                <button
+                  onClick={() => handleGenderChange("boy")}
+                  className={`px-3 py-1 rounded-lg ${
+                    avatarGender === "boy"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  👦 Boy
+                </button>
+                <button
+                  onClick={() => handleGenderChange("girl")}
+                  className={`px-3 py-1 rounded-lg ${
+                    avatarGender === "girl"
+                      ? "bg-pink-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  👧 Girl
+                </button>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleAliasSave}
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="text-gray-500 underline text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-700 mb-2">
+                <span className="font-medium">Alias:</span>{" "}
+                <span className="text-purple-700 font-semibold">
+                  {userData?.alias || "No alias"}
+                </span>
+              </p>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition text-sm"
+              >
+                ✏️ Edit
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="relative w-full h-[620px] flex items-center justify-center mb-6">
         <img
-          src="/img/avatar-base.png"
+          src={`/img/${
+            avatarGender === "boy" ? "avatar-boy.png" : "avatar-girl.png"
+          }`}
           alt="Your avatar"
           className="h-full max-h-[900px] object-contain z-10"
         />
@@ -197,7 +321,6 @@ export default function ProfilePanel({ userData, setUserData }) {
           })}
       </div>
 
-      {/* Collapsible grouped costume sections */}
       <div className="space-y-4">
         {Object.entries(groupedByCategory).map(([category, items]) => (
           <div key={category} className="bg-white rounded-xl shadow p-4">

@@ -160,3 +160,6 @@ VALUES
   ('Frog', 'frog.png', 20, 'companion'),
   ('Duck', 'duck.png', 200, 'companion'),
   ('Dog', 'dog.png', 500, 'companion');
+
+-- Add user gender
+alter table users add column avatar_gender text default 'girl';
