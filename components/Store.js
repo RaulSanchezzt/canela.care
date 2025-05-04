@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import BuyCoinsModal from "./BuyCoinsModal";
+import confetti from "canvas-confetti";
 
 export default function Store({ userData, setUserData }) {
   const [costumes, setCostumes] = useState([]);
@@ -8,6 +10,7 @@ export default function Store({ userData, setUserData }) {
   const [modalType, setModalType] = useState(""); // "confirm" o "result"
   const [modalMessage, setModalMessage] = useState("");
   const [selectedCostume, setSelectedCostume] = useState(null);
+  const [showBuyModal, setShowBuyModal] = useState(false);
 
   useEffect(() => {
     if (userData) {
@@ -57,7 +60,6 @@ export default function Store({ userData, setUserData }) {
 
     const { id: costumeId, price } = selectedCostume;
 
-    // Verificar si ya tiene comprado este accesorio
     const { data: existing, error: checkError } = await supabase
       .from("user_costumes")
       .select("*")
@@ -134,7 +136,9 @@ export default function Store({ userData, setUserData }) {
                   alt={costume.name}
                   className="w-20 h-20 mb-2 object-contain"
                 />
-                <div className="font-semibold text-center">{costume.name}</div>
+                <div className="font-semibold text-center text-gray-600">
+                  {costume.name}
+                </div>
                 <div className="text-gray-600 text-sm mb-2">
                   {costume.price} coins
                 </div>
@@ -159,6 +163,16 @@ export default function Store({ userData, setUserData }) {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Buy Coins Button */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={() => setShowBuyModal(true)}
+          className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition"
+        >
+          Buy Coins
+        </button>
       </div>
 
       {/* Modal */}
@@ -193,6 +207,25 @@ export default function Store({ userData, setUserData }) {
             )}
           </div>
         </div>
+      )}
+
+      {/* Buy Coins Modal */}
+      {showBuyModal && (
+        <BuyCoinsModal
+          onClose={() => setShowBuyModal(false)}
+          onPurchase={async (coins) => {
+            const newTotal = (userData?.coins || 0) + coins;
+
+            await supabase
+              .from("users")
+              .update({ coins: newTotal })
+              .eq("id", userData.id);
+
+            setUserData((prev) => ({ ...prev, coins: newTotal }));
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            setShowBuyModal(false);
+          }}
+        />
       )}
     </div>
   );

@@ -34,8 +34,12 @@ CREATE TABLE public.costumes (
   name TEXT NOT NULL,
   image_file TEXT NOT NULL,
   price INTEGER NOT NULL,
+  category TEXT NOT NULL CHECK (
+    category IN ('hat', 'hand', 'companion')
+  ),
   created_at TIMESTAMPTZ DEFAULT now()
 );
+
 
 -- Crear tabla de disfraces por usuario
 CREATE TABLE public.user_costumes (
@@ -143,3 +147,16 @@ INSERT INTO public.tasks_library (description, category, coins) VALUES
 SELECT * FROM public.tasks_library WHERE category = 'Physical' LIMIT 1;
 SELECT * FROM public.tasks_library WHERE category = 'Mental' LIMIT 1;
 SELECT * FROM public.tasks_library WHERE category = 'Social' LIMIT 1;
+
+-- Add costumes
+INSERT INTO costumes (name, image_file, price, category)
+VALUES 
+  ('Cool Hat', 'hat1.png', 5, 'hat'),
+  ('Top Hat', 'hat2.png', 30, 'hat'),
+  ('Flute Hat', 'hat3.png', 100, 'hat'),
+  ('Soda', 'soda.png', 15, 'hand'),
+  ('Burger', 'burger.png', 50, 'hand'),
+  ('Apple', 'apple.png', 150, 'hand'),
+  ('Frog', 'frog.png', 20, 'companion'),
+  ('Duck', 'duck.png', 200, 'companion'),
+  ('Dog', 'dog.png', 500, 'companion');
